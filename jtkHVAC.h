@@ -5,5 +5,5 @@
 
 class jtkHVAC{
 
-}
+};
 #endif
