@@ -24,5 +24,5 @@ class jtkSchedule{
     int temp;
     
   }
-
+};
 #endif
