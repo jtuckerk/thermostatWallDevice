@@ -1,0 +1,10 @@
+#ifndef jtkSchedule_h
+#define jtkSchedule_h
+
+#include "Arduino.h"
+
+class jtkSchedule{
+
+}
+
+#endif
