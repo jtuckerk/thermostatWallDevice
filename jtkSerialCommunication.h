@@ -2,7 +2,6 @@
 #define jtkSerial_h
 
 #include "Arduino.h"
-#include "serial.h"
 
 class jtkSerial{
 
@@ -28,5 +27,5 @@ class jtkSerial{
     delay(1000);
   }
   
-}
+};
 #endif
