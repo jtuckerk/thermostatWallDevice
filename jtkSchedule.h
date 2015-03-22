@@ -1,8 +1,8 @@
 #ifndef jtkSchedule_h
 #define jtkSchedule_h
 #include <string>
-#include "rtc_clock.h"
-#include "Arduino.h"
+
+
 
 
 
@@ -36,14 +36,15 @@ class jtkSchedule {
     int hours;
     int minutes;
   };
-
-  RTC_clock rtc_clock(0);
   
   jtkSchedule();
   //updates time on microcontroller and any schedule updates
+  void setTime(struct DHM time);
+
+
   void update();
 
-  void setTimeSegment(int TempF, struct DHM time);
+  void setTimeSegment(int TempF,  DHM time);
   
   int setRange(int TempF, struct DHM timeStart, struct DHM timeEnd);
   

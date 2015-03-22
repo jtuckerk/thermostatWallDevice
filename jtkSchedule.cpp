@@ -1,12 +1,5 @@
 #include "jtkSchedule.h"
 
-
-void jtkSchedule::setTime(struct DHM time){
-  rtc_clock.set_time(time.hours, time.minutes, 0);
-  rtc_clock.set_date(time.days, 0, 0);
-  
-}
-
 jtkSchedule::jtkSchedule(){
   for(int i = 0; i< DAYS; i++){
     for(int j = 0; j < SEGMENTS_PER_DAY; j++){
@@ -15,6 +8,10 @@ jtkSchedule::jtkSchedule(){
   }
 }
 
+void jtkSchedule::setTime(struct DHM time){
+
+  
+}
 //updates time on microcontroller and any schedule updates
 void jtkSchedule::update(){
   

@@ -1,7 +1,8 @@
 #ifndef jtkHVAC_h
 #define jtkHVAC_h
 
-#include "Arduino.h"
+#include <string>
+
 class jtkHVAC{
 
 };
