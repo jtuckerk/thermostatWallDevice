@@ -7,12 +7,14 @@ class jtkSerial{
 
  public:
   jtkSerial(){
-    this.initialize();
+    this->initialize();
   }
-  initialize(){
+  void initialize(){
     Serial.begin(115200);
   }
-  run(){
+  void run(){
+    int counter =0;
+  while(1){
     Serial.print("Tick #");
     Serial.print(counter++, DEC);
     Serial.print("\n");
@@ -25,6 +27,7 @@ class jtkSerial{
       Serial.print("\n");
     }
     delay(1000);
+  }
   }
   
 };

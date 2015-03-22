@@ -14,15 +14,15 @@ class jtkSchedule{
  private:
   void setTime();
 
-  timeSlice schedule[DAYS][SLICES_PER_DAY];
+ // struct timeSlice schedule[DAYS][SLICES_PER_DAY];
   
   struct schedule {
     
-  }
+  };
   
   struct timeSlice {
     int temp;
     
-  }
+  };
 };
 #endif
