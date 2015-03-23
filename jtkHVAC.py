@@ -11,16 +11,16 @@ class jtkHVAC:
     # W3/O/B- 3rd Stage Heating
     setPoint = 68
         
-    def getTemp():
+    def getTemp(self):
         temp =68 #@@ either add console temp input or get thermometer
-        print "Temp is " + temp+ "F"
+        print "Temp is " +str( temp)+ "F"
         return temp
     
     def setSetPoint(self, setpoint):
         self.setPoint = setpoint
         
-    def controlUpdate():
-        temp = getTemp()
+    def controlUpdate(self):
+        temp = self.getTemp()
 
         #cooling
         if(temp > self.setPoint + .3): # + .3 avoids frequent switching 
@@ -37,7 +37,7 @@ class jtkHVAC:
             if(temp >= self.setPoint -2):
                 print("low heat G and W on")
             #medium heat
-            elif(temp >= self.setPoint -4 && temp < self.setPoint -2):
+            elif(temp >= self.setPoint -4 and temp < self.setPoint -2):
                 print("low heat G, W and W2 on")
             #high heat
             else:
