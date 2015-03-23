@@ -8,40 +8,43 @@ class jtkSerial:
     import sys
     import threading
     import struct
-    #import RPi.GPIO as GPIO
 
-    mux = 0
-    psock = 0
+    mux = any
+    psock = any
     
     def __init__(self):
         print "intialzing Serial Communication"
-        mux = usbmux.USBMux()
+        self.mux = self.usbmux.USBMux()
 
-    def scanForDevice():
+    def scanForDevice(self):
         print "Waiting for devices..."
-        if not mux.devices:
-            mux.process(1.0)
-        if not mux.devices:
+        if not self.mux.devices:
+            self.mux.process(1.0)
+        if not self.mux.devices:
             print "No device found"
-            return false
+            return False
         else:
-            return true
+            return True
 
     def connectToDevice(self):
-        dev = mux.devices[0]
+        dev = self.mux.devices[0]
         print "connecting to device %s" % str(dev)
-        psock = mux.connect(dev, 2345)
+        try:
+            self.psock = self.mux.connect(dev, 2345)
+        except:
+            return False
+        return True
 
-    def read():
+    def read(self):
         while True:
-            msg = psock.recv(1024)
+            msg = self.psock.recv(1024)
             print msg
             if not msg: break
 
-        print "finished reading"
+        return False
             
             
 
-    def closeConnection():
+    def closeConnection(self):
         psock.close()
         
