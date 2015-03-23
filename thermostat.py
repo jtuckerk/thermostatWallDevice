@@ -23,7 +23,8 @@ def notConnected(found):
 def connected():
     global isConnected
     while isConnected:
-       isConnected = serial.read()
+        print "reading"
+        isConnected = serial.read()
 
 while 1:
     if(isConnected):
