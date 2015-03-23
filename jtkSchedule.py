@@ -2,19 +2,31 @@ from collections import OrderedDict
 import sys
 import datetime
 import time
+import json
 
+#@@segment not used - not able to todo Json decode on object within object
 class segment:
+    def __init__(self):
+        self.tempSetPoint = 68
+        
     tempSetPoint = 68
 
 class jtkSchedule:
 
+    #each segment holds the temp set point of each for time steps during the day 
     SEGMENTS_PER_HOUR = 4;
     SEGMENTS_PER_DAY = 24*SEGMENTS_PER_HOUR
+
+    #holds the time difference between the device's clock
+    #and the actual time as set by the controlling smart phone
     timeOffset = 0    
-    array = [1,2,3,4]
+
+    #the keys, Monday, Tuesday... map to a SEGMENTS_PER_DAY sized array
+    #that holds the the point temperature for the time of day
     scheduleDict = OrderedDict()
 
-    defaultSegment = segment()
+    #each segment is initialized to 68 degrees
+    defaultSegment = 68
 
     def __init__(self):
         self.scheduleDict.update({'Monday':[]})
@@ -24,21 +36,30 @@ class jtkSchedule:
         self.scheduleDict.update({'Friday':[]})
         self.scheduleDict.update({'Saturday':[]})
         self.scheduleDict.update({'Sunday':[]})
+
+        #loads default setpoint temp
         for day in self.scheduleDict:
             for x in range(0, self.SEGMENTS_PER_DAY):
                 self.scheduleDict[day].append(self.defaultSegment)
-    
+
+    #@@debugging print
     def printSchedule(self):
+        i=0
         for day in self.scheduleDict:
             print day
+            i=0
             for n in self.scheduleDict[day]:
-                    print n.tempSetPoint
-    
+                print str(n) + 'seg:' + str(day)+  ','+ str(i) 
+                i+=1
+
+    #sets the offset for the time and day (does not keep track of months/years)
+    #from the devices clock - allows the smartphone to control the time
     def setTime(self, day, hour, minute, second):
         offset = time.time()-(day*24*60*60 + hour*60*60 + minute*60 +second)
         self.timeOffset = offset
 
-        
+    #gets time based of offset. days 0-6 24 hour format
+    #returns an array 
     def getTime(self):
         sysTime = time.time() - self.timeOffset
         day = sysTime/(24*60*60)
@@ -46,17 +67,41 @@ class jtkSchedule:
         minute = sysTime%(24*60*60)%(3600)/60
         second = sysTime%(24*60*60)%(3600)%60
         day = day%7
-        return (day, hour, minute, second)
-                    
-    def getTimeSegmentInfo(self, DHMStuple):
+        return [day, hour, minute, second]
+
+    #gets segment at a certain time as specified by [day, hour, minute, second]
+    def getTimeSegment(self, DHMStuple):
+        abTuple = self.getSegmentCoordinates(DHMStuple)
+        return self.scheduleDict.items()[abTuple[0]][1][abTuple[1]]
+
+    #sets segment at a certain time as specified by [day, hour, minute, second]
+    def setTimeSegment(self, DHMStuple, segment):
+        abTuple = self.getSegmentCoordinates(DHMStuple)
+        self.setSegmentWithABtuple(abTuple, segment)
+
+    #used to set the exact array position of the time
+    def setSegmentWithABtuple(self, abTuple, segment):
+        self.scheduleDict.items()[abTuple[0]][1][abTuple[1]] = segment
+
+    #sets a range of setpoints     
+    def setSegmentRange(self, startDHMS, endDHMS, segment):
+        startTuple = self.getSegmentCoordinates(startDHMS)
+        endTuple = self.getSegmentCoordinates(endDHMS)
+        while(startTuple[0] < endTuple[0]):
+            while(startTuple[1] < self.SEGMENTS_PER_DAY):
+                self.setSegmentWithABtuple(startTuple, segment)
+                print(startTuple)
+                startTuple[1]+=1
+
+            startTuple[1]=0
+            startTuple[0]+=1
+        while(startTuple[1] <= endTuple[1]):
+            self.setSegmentWithABtuple(startTuple, segment)
+            print(startTuple)
+            startTuple[1]+=1
+            
         
-
-        print self.scheduleDict[day]
-
-    def setTimeSegmentInfo(self, DHMStuple, segment):
-        k
-        
-
+    #used to get the coordinates of a setpoint in the schedule dictionary's arrays
     def getSegmentCoordinates(self, DHMStuple):
         day = DHMStuple[0]
         hour = DHMStuple[1]
@@ -64,7 +109,22 @@ class jtkSchedule:
         second = DHMStuple[3]
         
         a = day 
-        b = hour*SE
-        return (day, hour*
+        b = hour*self.SEGMENTS_PER_HOUR + minute/(60/self.SEGMENTS_PER_HOUR)
+        return [a,b]
 
-        
+    #gets temp setpoint for current time
+    def getCurrentSeg(self):
+        return self.getTimeSegment(getTime())
+
+    #gets a json string representation of the schedule for serial communication
+    def getJsonSchedule(self):
+        return (json.dumps(self.scheduleDict, sort_keys=False))
+
+    #turns a JSON string to a ordered dictionary object representing a schedule
+    def parseJsonSchedule(self, JSONstring):
+        orderedDict = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(JSONstring)
+        return orderedDict
+
+    #take a json string schedule and sets it as the thermostats schedule
+    def setSchedule(self, JSONschedule):
+        scheduleDict = parseJsonSchedule(JSONschedule)
