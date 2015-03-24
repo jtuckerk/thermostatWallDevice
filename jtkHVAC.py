@@ -22,9 +22,11 @@ class jtkHVAC:
     def setSetPoint(self, setpoint):
         self.setPoint = setpoint
         
-    def controlUpdate(self):
+    def controlUpdate(self, sched):
         temp = self.getTemp()
 
+        #sets the setpoint to the current setpoint in the schedule
+        self.setSetPoint(sched.getCurrentSeg());
         #cooling
         if(temp > self.setPoint + .3): # + .3 avoids frequent switching 
             #low cool Y and G on

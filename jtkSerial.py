@@ -72,6 +72,7 @@ class jtkSerial:
         self.sched = sched
         
         isConnected = True
+        counter = 0
         while isConnected:
             msg = self.psock.recv(1024)
             try:
@@ -88,6 +89,11 @@ class jtkSerial:
             else:
                 print msg
                 self.dispatchMessage(msg)
+            if counter is 1000:
+                hvac.controlUpdate(sched)
+                counter = 0
+            else:
+                counter +=1
 
         return isConnected
             
