@@ -1,4 +1,6 @@
-    
+import json
+from json import JSONDecoder    
+
 class jtkSerial:
 
     import usbmux
@@ -8,10 +10,9 @@ class jtkSerial:
     import sys
     import threading
     import struct
-    import queue
+    import Queue
     from collections import OrderedDict
-    import json
-    from json import JSONDecoder
+
 
     from jtkHVAC import jtkHVAC
     from jtkSchedule import jtkSchedule
@@ -22,7 +23,7 @@ class jtkSerial:
     
     mux = any
     psock = any
-    outGoingMsgQueue = queue()
+    outGoingMsgQueue = Queue.Queue()
     
     def __init__(self):
         print "intialzing Serial Communication"
@@ -35,7 +36,7 @@ class jtkSerial:
         
         self.replyDict = {'setSchedule': 'setSchedule',
                           'getSchedule': 'getSchedule',
-                          'getTemp': 'getTemp'
+                          'getTemp': 'getTemp',
                           'setTemp': 'setTemp',
                           'setDate': 'setDate',
                           'setSetPoint': 'setSetPoint'}
@@ -74,11 +75,13 @@ class jtkSerial:
         while isConnected:
             msg = self.psock.recv(1024)
             try:
-                if(not outGoingMsgQueue.empty()):
-                    outMsg = outGoingMsgQueue.get()
+                if(not self.outGoingMsgQueue.empty()):
+                    print "sending message"
+                    outMsg = self.outGoingMsgQueue.get()
                     self.psock.send(outMsg)
                     print outMsg #@@ debug
-            except:
+            except Exception, e:
+                print "sendFail: " + str(e)
                 isConnected = False
             if not msg:
                 isConnected = False
@@ -88,15 +91,14 @@ class jtkSerial:
 
         return isConnected
             
-            
 
     def closeConnection(self):
         psock.close()
 
     def dispatchMessage(self, msg):
 
-        msgObj =  self.json.JSONDecoder(object_pairs_hook=self.OrderedDict).decode(msg)
-        msgObj = {'type': 'getSchedule'} #@@debug 
+        msgObj =  json.JSONDecoder(object_pairs_hook=self.OrderedDict).decode(msg)
+        msgObj = {'type': 'setSetPoint', 'setPoint':58} #@@debug 
         #each message type maps to a dispatch function 
         if type(msgObj) is dict:
             #checks if the msgObj has a field 'type' or the type in that field
@@ -110,32 +112,44 @@ class jtkSerial:
 
     def setSchedule(self, msgObj):
         print "setSchedule"
-        self.hvac.setScheduleDict(msgObj['schedule'])
-        self.hvac.printSchedule() #@@debug print
+        self.sched.setScheduleDict(msgObj['schedule'])
+        self.sched.printSchedule() #@@debug print
         
+    #gets current schedule upon request to be sent on the serial bus
     def getSchedule(self, msgObj):
         print "getSchedule"
-        jsonStr = self.hvac.getJsonSchedule()
-        res = constructReplyJson(msgObj['type'], jsonStr)
-        outGoingMsgQueue.put(res)
-        
+        jsonStr = self.sched.getJsonSchedule()
+        res = self.constructReplyJson(msgObj['type'], jsonStr)
+        self.outGoingMsgQueue.put(res)
+    
+    #gets the current temperature to be sent on the serial bus
     def getTemp(self, msgObj):
         print "getTemp"
+        temp = self.hvac.getTemp()
+        res = self.constructReplyJson(msgObj['type'], temp)
+        self.outGoingMsgQueue.put(res)
 
     def setTemp(self, msgObj):
         print "setTemp"
+        self.hvac.setTemp(msgObj['temp'])
 
     def setDate(self, msgObj):
         print "setDate"
+        dtDHMS = msgObj['datetime']
+        self.sched.setTime(dtDHMS[0], dtDHMS[1], dtDHMS[2], dtDHMS[3])
 
     def setSetPoint(self, msgObj):
         print "setSetPoint"
+        setPoint = msgObj['setPoint']
+        self.hvac.setSetPoint(setPoint)
+        self.sched.setTimeSegment(self.sched.getTime(), setPoint)
+        
 
     #constructs a json string reply
     #takes the request object whose 'type' is used to find the proper
     #return 'type', and the object is added to the appropriate object field
     def constructReplyJson(self, reqType, resJson):
-        respType = replyDict[reqType]
+        respType = self.replyDict[reqType]
         #@@resObj is already parsed json 
-        response = {'type':respType, 'obj': resObj}
+        response = {'type':respType, 'obj': resJson}
         return json.dumps(response, sort_keys=False)

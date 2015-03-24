@@ -13,12 +13,12 @@ class jtkHVAC:
     temp = 68 
     def getTemp(self):
          #@@ either add console temp input or get thermometer
-        print "Temp is " +str( temp)+ "F"
-        return temp
+        #print "Temp is " +str(self.temp)+ "F"
+        return self.temp
 
     def setTemp(self, temp):
         self.temp = temp
-        
+    #@@need to make a set setpoint method to do a temporary range    
     def setSetPoint(self, setpoint):
         self.setPoint = setpoint
         

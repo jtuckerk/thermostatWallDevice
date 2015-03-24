@@ -62,10 +62,10 @@ class jtkSchedule:
     #returns an array 
     def getTime(self):
         sysTime = time.time() - self.timeOffset
-        day = sysTime/(24*60*60)
-        hour = sysTime%(24*60*60)/(3600)
-        minute = sysTime%(24*60*60)%(3600)/60
-        second = sysTime%(24*60*60)%(3600)%60
+        day = int(sysTime/(24*60*60))
+        hour = int(sysTime%(24*60*60)/(3600))
+        minute = int(sysTime%(24*60*60)%(3600)/60)
+        second = int(sysTime%(24*60*60)%(3600)%60)
         day = day%7
         return [day, hour, minute, second]
 
@@ -110,7 +110,7 @@ class jtkSchedule:
         
         a = day 
 
-        b = hour*self.SEGMENTS_PER_HOUR + minute/(60/self.SEGMENTS_PER_HOUR)
+        b = hour*self.SEGMENTS_PER_HOUR + int(minute/(60/self.SEGMENTS_PER_HOUR))
         return [a,b]
 
     #gets temp setpoint for current time
