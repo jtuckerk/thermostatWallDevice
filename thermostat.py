@@ -16,6 +16,7 @@ def offlineRun():
 def notConnected(found):
     global isConnected
     while(not found):
+        #keeps thermostat running on schedule while offline
         offlineRun();
         found = serial.scanForDevice()
         time.sleep(.5)

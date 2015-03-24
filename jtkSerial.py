@@ -9,6 +9,9 @@ class jtkSerial:
     import threading
     import struct
 
+    hvac = any
+    sched = any
+    
     mux = any
     psock = any
     dispatchFunctionDict = {'setSchedule': setSchedule,
@@ -17,6 +20,7 @@ class jtkSerial:
                             'setTemp': setTemp, #used for demo in absence of temp sensor
                             'setDate': setDate,
                             'setSetPoint': setSetPoint}
+    
     def __init__(self):
         print "intialzing Serial Communication"
         
@@ -48,6 +52,9 @@ class jtkSerial:
         return True
 
     def readWriteControl(self, hvac, sched):
+        self.hvac = hvac
+        self.sched = sched
+        
         isConnected = True
         while isConnected:
             msg = self.psock.recv(1024)
@@ -69,8 +76,26 @@ class jtkSerial:
         psock.close()
 
     def dispatchMessage(self, msg):
-        messageObj = parseMessage(msg)
+        messageObj =  json.JSONDecoder(object_pairs_hook=OrderedDict).decode(msg)
         
         #each message type maps to a dispatch function 
-        dispatchFunctionDict[messageObj.msgType](messageObj)
+        dispatchFunctionDict[messageObj['type']](messageObj)
+
+    def setSchedule(self, messageObj):
+        print "setSchedule"
         
+        
+    def getSchedule(self, messageObj):
+        print "getSchedule"
+
+    def getTemp(self, messageObj):
+        print "getTemp"
+
+    def setTemp(self, messageObj):
+        print "setTemp"
+
+    def setDate(self, messageObj):
+        print "setDate"
+
+    def setSetPoint(self, messageObj):
+        print "setSetPoint"

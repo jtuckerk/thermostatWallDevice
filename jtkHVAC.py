@@ -10,12 +10,15 @@ class jtkHVAC:
     # W2/E  - 2nd Stage Heating
     # W3/O/B- 3rd Stage Heating
     setPoint = 68
-        
+    temp = 68 
     def getTemp(self):
-        temp =68 #@@ either add console temp input or get thermometer
+         #@@ either add console temp input or get thermometer
         print "Temp is " +str( temp)+ "F"
         return temp
-    
+
+    def setTemp(self, temp):
+        self.temp = temp
+        
     def setSetPoint(self, setpoint):
         self.setPoint = setpoint
         
