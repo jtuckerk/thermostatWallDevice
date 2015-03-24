@@ -109,8 +109,8 @@ class jtkSchedule:
         second = DHMStuple[3]
         
         a = day 
-cd ..
-cd b = hour*self.SEGMENTS_PER_HOUR + minute/(60/self.SEGMENTS_PER_HOUR)
+
+        b = hour*self.SEGMENTS_PER_HOUR + minute/(60/self.SEGMENTS_PER_HOUR)
         return [a,b]
 
     #gets temp setpoint for current time

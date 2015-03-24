@@ -9,21 +9,29 @@ class jtkSerial:
     import threading
     import struct
 
+    from collections import OrderedDict
+    import json
+    from json import JSONDecoder
+
+    from jtkHVAC import jtkHVAC
+    from jtkSchedule import jtkSchedule
+
+
     hvac = any
     sched = any
     
     mux = any
     psock = any
-    dispatchFunctionDict = {'setSchedule': setSchedule,
-                            'getSchedule': getSchedule,
-                            'getTemp': getTemp,
-                            'setTemp': setTemp, #used for demo in absence of temp sensor
-                            'setDate': setDate,
-                            'setSetPoint': setSetPoint}
+
     
     def __init__(self):
         print "intialzing Serial Communication"
-        
+        self.dispatchFunctionDict = {'setSchedule': self.setSchedule,
+                                'getSchedule': self.getSchedule,
+                                'getTemp': self.getTemp,
+                                'setTemp': self.setTemp, #used for demo in absence of temp sensor
+                                'setDate': self.setDate,
+                                'setSetPoint': self.setSetPoint}        
 
     def scanForDevice(self):
         print "Looking for devices..."
@@ -66,7 +74,7 @@ class jtkSerial:
                 isConnected = False
             else:
                 print msg
-                dipatchMessage(msg)
+                self.dispatchMessage(msg)
 
         return isConnected
             
@@ -76,26 +84,35 @@ class jtkSerial:
         psock.close()
 
     def dispatchMessage(self, msg):
-        messageObj =  json.JSONDecoder(object_pairs_hook=OrderedDict).decode(msg)
-        
-        #each message type maps to a dispatch function 
-        dispatchFunctionDict[messageObj['type']](messageObj)
 
-    def setSchedule(self, messageObj):
+        msgObj =  self.json.JSONDecoder(object_pairs_hook=self.OrderedDict).decode(msg)
+        msgObj = {'type': 'setSchedule'}
+        #each message type maps to a dispatch function 
+        if type(msgObj) is dict:
+            #checks if the msgObj has a field 'type' or the type in that field
+            # matches any defined function
+            if self.dispatchFunctionDict.get(msgObj.get('type', None), None):
+                self.dispatchFunctionDict[msgObj['type']](msgObj)
+            else:
+                print "improperly formatted dictionary object"
+        else:
+            print "unknown message: " + msg
+
+    def setSchedule(self, msgObj):
         print "setSchedule"
         
         
-    def getSchedule(self, messageObj):
+    def getSchedule(self, msgObj):
         print "getSchedule"
 
-    def getTemp(self, messageObj):
+    def getTemp(self, msgObj):
         print "getTemp"
 
-    def setTemp(self, messageObj):
+    def setTemp(self, msgObj):
         print "setTemp"
 
-    def setDate(self, messageObj):
+    def setDate(self, msgObj):
         print "setDate"
 
-    def setSetPoint(self, messageObj):
+    def setSetPoint(self, msgObj):
         print "setSetPoint"

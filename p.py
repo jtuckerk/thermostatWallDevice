@@ -31,33 +31,38 @@ from json import JSONEncoder
 #     hvac.setSetPoint(n)
 #     hvac.controlUpdate()
 
-def a():
-    print 'A'
+# def a():
+#     print 'A'
 
-def b():
-    print 'B'
+# def b():
+#     print 'B'
 
-    ##@@syntax for ordered dict assignment
-dict1 =OrderedDict([('apple', 6), ('banana', 3), ('asshole', 5), ('orange', 2), ('pear', 1)])
+#     ##@@syntax for ordered dict assignment
+# dict1 =OrderedDict([('apple', 6), ('banana', 3), ('asshole', 5), ('orange', 2), ('pear', 1)])
 
-class random:
-    temp = 5
+# class random:
+#     temp = 5
 
-a = random()
+# a = random()
 
 #str = json.dumps(a, sort_keys=False)
 
-object1 = {'type1':'sched', 'obj': 4}
 
-msg =  json.dumps(object1, sort_keys=False)
+# object1 = {'type1':'sched', 'obj': 4}
 
-orderedDictObj2 = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(msg)
+# msg =  json.dumps(object1, sort_keys=False)
 
-#print jsonStrObj1
-#obj2 = json.loads(jsonStrObj1)
-print orderedDictObj2['obj']
+# orderedDictObj2 = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(msg)
+
+# #print jsonStrObj1
+# #obj2 = json.loads(jsonStrObj1)
+# print orderedDictObj2['obj']
 #print orderedDictObj2[0]
 
 
 #print str
-
+default = 'Scruffy'
+adict = {'hello': 'hi'}
+a = adict.get('dogname', None)
+print a
+print adict
