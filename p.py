@@ -19,10 +19,12 @@ from jtkHVAC import jtkHVAC
 
 # print sched.scheduleDict['Friday']
 # print dict['Friday']
-hvac = jtkHVAC()
 
-hvac.setSetPoint(50)
+#hvac = jtkHVAC()
 
-for n in range(50, 80):
-    hvac.setSetPoint(n)
-    hvac.controlUpdate()
+#hvac.setSetPoint(50)
+
+# for n in range(50, 80):
+#     hvac.setSetPoint(n)
+#     hvac.controlUpdate()
+

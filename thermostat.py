@@ -9,13 +9,19 @@ found = False
 hvac = jtkHVAC()
 serial = jtkSerial()
 sched = jtkSchedule()
-    
+
+def offlineRun():    
+    print "running offline"
+
 def notConnected(found):
     global isConnected
     while(not found):
+        offlineRun();
         found = serial.scanForDevice()
+        time.sleep(.5)
+
     while(not isConnected):
-        
+        offlineRun();
         isConnected = serial.connectToDevice()
         time.sleep(.5)
     print "connected"
@@ -24,7 +30,7 @@ def connected():
     global isConnected
     while isConnected:
         print "reading"
-        isConnected = serial.read()
+        isConnected = serial.readWriteControl(hvac, sched)
 
 while 1:
     if(isConnected):
