@@ -127,5 +127,8 @@ class jtkSchedule:
         return orderedDict
 
     #take a json string schedule and sets it as the thermostats schedule
-    def setSchedule(self, JSONschedule):
-        scheduleDict = parseJsonSchedule(JSONschedule)
+    def setScheduleJSON(self, JSONschedule):
+        self.scheduleDict = parseJsonSchedule(JSONschedule)
+    def setScheduleDict(self, schedDict):
+        self.setScheduleDict = schedDict
+    
