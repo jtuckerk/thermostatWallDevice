@@ -115,7 +115,7 @@ class jtkSchedule:
 
     #gets temp setpoint for current time
     def getCurrentSeg(self):
-        return self.getTimeSegment(getTime())
+        return self.getTimeSegment(self.getTime())
 
     #gets a json string representation of the schedule for serial communication
     def getJsonSchedule(self):
