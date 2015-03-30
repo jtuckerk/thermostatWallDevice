@@ -74,7 +74,7 @@ class jtkSerial:
         isConnected = True
         counter = 0
         while isConnected:
-            msg = self.psock.recv(1024)
+            msg = self.psock.recv(5000)
             try:
                 if(not self.outGoingMsgQueue.empty()):
                     print "sending message"
@@ -88,6 +88,7 @@ class jtkSerial:
                 isConnected = False
             else:
                 print msg
+                print "message Read"
                 self.dispatchMessage(msg)
             if counter is 1000:
                 hvac.controlUpdate(sched)
@@ -104,9 +105,9 @@ class jtkSerial:
     def dispatchMessage(self, msg):
 
         msgObj =  json.JSONDecoder(object_pairs_hook=self.OrderedDict).decode(msg)
-        msgObj = {'type': 'setSetPoint', 'setPoint':58} #@@debug 
+#        msgObj = {'type': 'setSetPoint', 'setPoint':58} #@@debug 
         #each message type maps to a dispatch function 
-        if type(msgObj) is dict:
+        if type(msgObj) is self.OrderedDict:
             #checks if the msgObj has a field 'type' or the type in that field
             # matches any defined function
             if self.dispatchFunctionDict.get(msgObj.get('type', None), None):
@@ -118,7 +119,7 @@ class jtkSerial:
 
     def setSchedule(self, msgObj):
         print "setSchedule"
-        self.sched.setScheduleDict(msgObj['schedule'])
+        self.sched.setScheduleDict(msgObj['Object'])
         self.sched.printSchedule() #@@debug print
         
     #gets current schedule upon request to be sent on the serial bus
