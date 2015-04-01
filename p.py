@@ -70,3 +70,6 @@ msg = '{"type":"setSchedule","Object":{"Friday":[50,50,50,50,50,50,50,50,50,50,5
 
 orderedDict2 = json.JSONDecoder(object_pairs_hook=OrderedDict).decode(msg)
 print orderedDict2
+
+if type(orderedDict2) is OrderedDict:
+    print orderedDict2["Object"]

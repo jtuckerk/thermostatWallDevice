@@ -130,5 +130,5 @@ class jtkSchedule:
     def setScheduleJSON(self, JSONschedule):
         self.scheduleDict = parseJsonSchedule(JSONschedule)
     def setScheduleDict(self, schedDict):
-        self.setScheduleDict = schedDict
+        self.scheduleDict = schedDict
     

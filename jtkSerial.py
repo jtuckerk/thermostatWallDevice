@@ -1,11 +1,11 @@
 import json
 from json import JSONDecoder    
-
+import select
 class jtkSerial:
 
     import usbmux
     import SocketServer
-    import select
+
     from optparse import OptionParser
     import sys
     import threading
@@ -74,27 +74,29 @@ class jtkSerial:
         isConnected = True
         counter = 0
         while isConnected:
-            msg = self.psock.recv(5000)
+            ready = select.select([self.psock], [], [], 1)
+
+            if ready[0]:
+                msg = self.psock.recv(5000)
+            
+                if not msg:
+                    isConnected = False
+                else:
+                    print msg
+                    print "message Read"
+                    self.dispatchMessage(msg)
             try:
                 if(not self.outGoingMsgQueue.empty()):
                     print "sending message"
                     outMsg = self.outGoingMsgQueue.get()
                     self.psock.send(outMsg)
-                    print outMsg #@@ debug
+                    print "SENT!:" + outMsg #@@ debug
             except Exception, e:
                 print "sendFail: " + str(e)
                 isConnected = False
-            if not msg:
-                isConnected = False
-            else:
-                print msg
-                print "message Read"
-                self.dispatchMessage(msg)
-            if counter is 1000:
-                hvac.controlUpdate(sched)
-                counter = 0
-            else:
-                counter +=1
+
+            #updates HVAC controls every second?
+            self.hvac.controlUpdate(sched)
 
         return isConnected
             
@@ -119,8 +121,8 @@ class jtkSerial:
 
     def setSchedule(self, msgObj):
         print "setSchedule"
-        self.sched.setScheduleDict(msgObj['Object'])
-        self.sched.printSchedule() #@@debug print
+        self.sched.setScheduleDict(msgObj['schedule'])
+        #self.sched.printSchedule() #@@debug print
         
     #gets current schedule upon request to be sent on the serial bus
     def getSchedule(self, msgObj):
