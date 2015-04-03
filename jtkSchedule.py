@@ -25,8 +25,8 @@ class jtkSchedule:
     #that holds the the point temperature for the time of day
     scheduleDict = OrderedDict()
 
-    #each segment is initialized to 68 degrees
-    defaultSegment = 68
+    #each segment is initialized to 68 degrees and home
+    defaultSegment = {'temp': 68, 'status': 'Home'}
 
     def __init__(self):
         self.scheduleDict.update({'Monday':[]})
