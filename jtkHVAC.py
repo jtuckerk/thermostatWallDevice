@@ -26,7 +26,7 @@ class jtkHVAC:
         temp = self.getTemp()
 
         #sets the setpoint to the current setpoint in the schedule
-        self.setSetPoint(sched.getCurrentSeg());
+        self.setSetPoint(sched.getCurrentSeg()['temp']);
         #cooling
         if(temp > self.setPoint + .3): # + .3 avoids frequent switching 
             #low cool Y and G on

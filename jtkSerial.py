@@ -77,7 +77,7 @@ class jtkSerial:
             ready = select.select([self.psock], [], [], 1)
 
             if ready[0]:
-                msg = self.psock.recv(5000)
+                msg = self.psock.recv(20000)
             
                 if not msg:
                     isConnected = False

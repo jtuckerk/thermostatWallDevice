@@ -26,7 +26,15 @@ class jtkSchedule:
     scheduleDict = OrderedDict()
 
     #each segment is initialized to 68 degrees
-    defaultSegment = 68
+    defaultSegment = {'temp': 68, 'status'
+
+    daysArray = ["Monday",
+                 "Tuesday",
+                 "Wednesday",
+                 "Thursday",
+                 "Friday",
+                 "Saturday",
+                 "Sunday"]
 
     def __init__(self):
         self.scheduleDict.update({'Monday':[]})
@@ -72,7 +80,8 @@ class jtkSchedule:
     #gets segment at a certain time as specified by [day, hour, minute, second]
     def getTimeSegment(self, DHMStuple):
         abTuple = self.getSegmentCoordinates(DHMStuple)
-        return self.scheduleDict.items()[abTuple[0]][1][abTuple[1]]
+                
+        return self.scheduleDict[self.daysArray[abTuple[0]]][abTuple[1]]
 
     #sets segment at a certain time as specified by [day, hour, minute, second]
     def setTimeSegment(self, DHMStuple, segment):
@@ -81,7 +90,7 @@ class jtkSchedule:
 
     #used to set the exact array position of the time
     def setSegmentWithABtuple(self, abTuple, segment):
-        self.scheduleDict.items()[abTuple[0]][1][abTuple[1]] = segment
+        self.scheduleDict[self.daysArray[abTuple[0]]][abTuple[1]] = segment
 
     #sets a range of setpoints     
     def setSegmentRange(self, startDHMS, endDHMS, segment):
