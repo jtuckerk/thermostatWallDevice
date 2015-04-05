@@ -38,7 +38,7 @@ class jtkSchedule:
                  "Sunday"]
 
     #each segment is initialized to 68 degrees and home
-    defaultSegment = {'temp': 68, 'status': 'Home'}
+    defaultSegment = {'setPoint': 68, 'status': 'Home'}
 
 
     def __init__(self):
@@ -67,7 +67,11 @@ class jtkSchedule:
 
     #sets the offset for the time and day (does not keep track of months/years)
     #from the devices clock - allows the smartphone to control the time
-    def setTime(self, day, hour, minute, second):
+    def setTime(self, DHMS):
+        day = DHMS[0]
+        hour = DHMS[1]
+        minute = DHMS[2]
+        second = DHMS[3]
         offset = time.time()-(day*24*60*60 + hour*60*60 + minute*60 +second)
         self.timeOffset = offset
 
