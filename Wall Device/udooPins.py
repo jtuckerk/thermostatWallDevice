@@ -29,35 +29,54 @@ class udooPins:
     W3Dir = W3Path + '/direction'
     W3Value = W3Path + '/value'
 
-    fan = open(fanValue, 'w')
-    Y = open(YValue, 'w')
-    Y2 = open(Y2Value, 'w')
-    W = open(WValue, 'w')
-    W2 = open(W2Value, 'w')
-    W3 = open(W3Value, 'w')
+    fan = None
+    Y = None
+    Y2 = None
+    W = None
+    W2 = None
+    W3 = None
     
-    allSwitches = [fan, Y, Y2, W, W2, W3]
-
     def __init__(self):
-        dirArray = [ open(self.fanDir, 'w'),
-                     open(self.YDir, 'w'),
-                     open(self.Y2Dir, 'w'),
-                     open(self.WDir, 'w'),
-                    open(self.W2Dir, 'w'),
-                    open(self.W3Dir, 'w')]
-        
-        for direction in dirArray:
-            direction.write('out')
-            direction.flush()
 
+
+        try:
+            self.fan = open(fanValue, 'w')
+            self.Y = open(YValue, 'w')
+            self.Y2 = open(Y2Value, 'w')
+            self.W = open(WValue, 'w')
+            self.W2 = open(W2Value, 'w')
+            self.W3 = open(W3Value, 'w')
+            
+            dirArray = [ open(self.fanDir, 'w'),
+                         open(self.YDir, 'w'),
+                         open(self.Y2Dir, 'w'),
+                         open(self.WDir, 'w'),
+                         open(self.W2Dir, 'w'),
+                         open(self.W3Dir, 'w')]
+        
+            for direction in dirArray:
+                direction.write('out')
+                direction.flush()
+        except:
+            connected = False
+            print "not connected to udoo pins"
+        self.allSwitches = [self.fan, self.Y, self.Y2, self.W, self.W2, self.W3]
+
+        self.connected = True
+            
+                
     def On(self,pinfile):
-        pinfile.write('1')
-        pinfile.flush()
+        if connected:
+            
+            pinfile.write('1')
+            pinfile.flush()
         
     def Off(self, pinfile):
-        pinfile.write('0')
-        pinfile.flush()
+        if connected:
+            pinfile.write('0')
+            pinfile.flush()
 
     def allOff(self):
-        for switch in self.allSwitches:
-            self.Off(switch)
+        if connected:
+            for switch in self.allSwitches:
+                self.Off(switch)
