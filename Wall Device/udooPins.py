@@ -1,3 +1,5 @@
+#!/usr/local/bin/python
+
 import time 
 
 class udooPins:
@@ -40,12 +42,12 @@ class udooPins:
 
 
         try:
-            self.fan = open(fanValue, 'w')
-            self.Y = open(YValue, 'w')
-            self.Y2 = open(Y2Value, 'w')
-            self.W = open(WValue, 'w')
-            self.W2 = open(W2Value, 'w')
-            self.W3 = open(W3Value, 'w')
+            self.fan = open(self.fanValue, 'w')
+            self.Y = open(self.YValue, 'w')
+            self.Y2 = open(self.Y2Value, 'w')
+            self.W = open(self.WValue, 'w')
+            self.W2 = open(self.W2Value, 'w')
+            self.W3 = open(self.W3Value, 'w')
             
             dirArray = [ open(self.fanDir, 'w'),
                          open(self.YDir, 'w'),
@@ -57,7 +59,8 @@ class udooPins:
             for direction in dirArray:
                 direction.write('out')
                 direction.flush()
-        except:
+        except Exception as e:
+            print e
             connected = False
             print "not connected to udoo pins"
         self.allSwitches = [self.fan, self.Y, self.Y2, self.W, self.W2, self.W3]

@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 from jtkSerial import jtkSerial
 from jtkSchedule import jtkSchedule
 from jtkHVAC import jtkHVAC
