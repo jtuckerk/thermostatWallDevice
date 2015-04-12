@@ -13,7 +13,7 @@ serial = jtkSerial()
 sched = jtkSchedule()
 
 def offlineRun():    
-    print "running offline"
+    hvac.controlUpdate(sched)
 
 def notConnected(found):
     global isConnected

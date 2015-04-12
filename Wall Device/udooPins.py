@@ -37,7 +37,7 @@ class udooPins:
     W = None
     W2 = None
     W3 = None
-    
+    connected = True
     def __init__(self):
 
 
@@ -61,25 +61,25 @@ class udooPins:
                 direction.flush()
         except Exception as e:
             print e
-            connected = False
+            self.connected = False
             print "not connected to udoo pins"
         self.allSwitches = [self.fan, self.Y, self.Y2, self.W, self.W2, self.W3]
 
-        self.connected = True
+
             
                 
     def On(self,pinfile):
-        if connected:
+        if self.connected:
             
             pinfile.write('1')
             pinfile.flush()
         
     def Off(self, pinfile):
-        if connected:
+        if self.connected:
             pinfile.write('0')
             pinfile.flush()
 
     def allOff(self):
-        if connected:
+        if self.connected:
             for switch in self.allSwitches:
                 self.Off(switch)
