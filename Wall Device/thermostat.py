@@ -21,12 +21,12 @@ def notConnected(found):
         #keeps thermostat running on schedule while offline
         offlineRun();
         found = serial.scanForDevice()
-        time.sleep(.5)
+        #time.sleep(.5)
 
     while(not isConnected):
         offlineRun();
         isConnected = serial.connectToDevice()
-        time.sleep(.5)
+        #time.sleep(.5)
     print "connected"
 
 def connected():
