@@ -42,6 +42,8 @@ class udooPins:
 
 
         try:
+            #tries to open pinfiles for writing
+            #if fails, assume not connected
             self.fan = open(self.fanValue, 'w')
             self.Y = open(self.YValue, 'w')
             self.Y2 = open(self.Y2Value, 'w')
@@ -55,7 +57,8 @@ class udooPins:
                          open(self.WDir, 'w'),
                          open(self.W2Dir, 'w'),
                          open(self.W3Dir, 'w')]
-        
+
+            #sets all pins as output
             for direction in dirArray:
                 direction.write('out')
                 direction.flush()
@@ -65,9 +68,6 @@ class udooPins:
             print "not connected to udoo pins"
         self.allSwitches = [self.fan, self.Y, self.Y2, self.W, self.W2, self.W3]
 
-
-            
-                
     def On(self,pinfile):
         if self.connected:
             

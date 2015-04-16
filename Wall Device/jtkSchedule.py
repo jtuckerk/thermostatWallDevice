@@ -103,6 +103,7 @@ class jtkSchedule:
 
     #sets a range of setpoints     
     def setSegmentRange(self, startDHMS, endDHMS, segment):
+        #converts from Day Hour Minute Second DHMS to [a,b] tuple, day and segment
         startTuple = self.getSegmentCoordinates(startDHMS)
         endTuple = self.getSegmentCoordinates(endDHMS)
         while(startTuple[0] < endTuple[0]):
