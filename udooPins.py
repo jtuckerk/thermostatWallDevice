@@ -7,15 +7,15 @@ class udooPins:
 #Conventional HVAC Control switches pin mappings
     ########################
     # G     - Fan
-    fanPath = '/sys/class/gpio/gpio1'
+    fanPath = '/sys/class/gpio/gpio19'
     fanDir = fanPath + '/direction'
     fanValue = fanPath + '/value'
     # Y     - 1st Stage Cooling
-    YPath = '/sys/class/gpio/gpio19'
+    YPath = '/sys/class/gpio/gpio21'
     YDir = YPath + '/direction'
     YValue = YPath + '/value'
     # Y2    - 2nd Stage Cooling
-    Y2Path = '/sys/class/gpio/gpio21'
+    Y2Path = '/sys/class/gpio/gpio1'
     Y2Dir = Y2Path + '/direction'
     Y2Value = Y2Path + '/value'
     # W     - 1st Stage Heating
